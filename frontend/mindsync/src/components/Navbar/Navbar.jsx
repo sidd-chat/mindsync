@@ -3,7 +3,7 @@ import ProfileInfo  from '../Cards/ProfileInfo'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar';
 
-const Navbar = () => {
+const Navbar = ({userInfo}) => {
 
   const navigate = useNavigate();
 
@@ -41,15 +41,17 @@ const Navbar = () => {
         <h2 className='text-3xl font-bold font-mono text-white py-2'>M i n d S y n c</h2>
       </span>
 
-      <SearchBar
-        ref={searchBarRef}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        handleSearch={onSearch}
-        onClearSearch={() => setSearch('')}
-      />
+      {/* userInfo && ( */}
+        <SearchBar
+          ref={searchBarRef}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          handleSearch={onSearch}
+          onClearSearch={() => setSearch('')}
+        />
+      {/* ) */}
 
-      <ProfileInfo onLogout={onLogout}/>
+      <ProfileInfo userInfo={userInfo} onLogout={onLogout}/>
     </div>
   )
 }

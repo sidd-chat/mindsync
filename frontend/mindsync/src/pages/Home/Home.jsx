@@ -5,6 +5,8 @@ import Navbar from "../../components/Navbar/Navbar";
 import NoteCard from "../../components/Cards/NoteCard";
 import { MdAdd } from "react-icons/md";
 
+import moment from "moment";
+
 // import { DndProvider, useDrag, useDrop } from "react-dnd";
 // import { HTML5Backend } from "react-dnd-html5-backend";
 import AddEditNote from "./AddEditNote";
@@ -25,16 +27,17 @@ const Home = () => {
   const [tags, setTags] = React.useState([]);
   const [search, setSearch] = useState("");
 
-  const [uesrInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
+  const [notesInfo, setNotesInfo] = useState([]);
 
   const navigate = useNavigate();
 
   const getUserInfo = async () => {
     try{
-      const response = await axiosInstance.get("/get-user");
+      const user = await axiosInstance.get("/get-user");
 
-      if(response.data && response.data.user) {
-        setUserInfo(response.data.user);
+      if(user.data && user.data.user) {
+        setUserInfo(user.data.user);
       }
     } catch(error) {
       if(error.response.status === 401) {
@@ -44,7 +47,27 @@ const Home = () => {
     }
   }
 
+  const getNotesInfo = async () => {
+    try {
+      const notesData = await axiosInstance.get("/all-notes");
+
+      console.log(notesData.data.notes);
+      if(notesData.data && notesData.data.notes) {
+        console.log(notesData.data.notes);
+
+        setNotesInfo(notesData.data.notes);
+        console.log(notesInfo)
+      }
+    } catch (error) {
+      if(error.response.status === 401) {
+        localStorage.clear();
+        navigate("/login");
+      }
+    }
+  }
+
   useEffect(() => {
+    getNotesInfo();
     getUserInfo();
     return () => {};
   }, [])
@@ -66,94 +89,28 @@ const Home = () => {
 
   return (
     <div className="">
-      <Navbar />
+      <Navbar userInfo={userInfo}/>
 
       <img src="../../../public/bg4.png" alt="background image" className="absolute z-[-1] h-max w-full top-[6rem] object-fill bg-center bg-repeat"/>
 
       <div className="container mx-auto">
         {/* <DndProvider backend={HTML5Backend}> */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8 mb-8 px-20">
-          <NoteCard
-            title="Daily Note 1"
-            date="2023-10-01"
-            content="This is the content of daily note 1"
-            tags={["work", "urgent"]}
-            isPinned={false}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 2"
-            date="2023-10-02"
-            content="This is the content of daily note 2"
-            tags={["personal"]}
-            isPinned={true}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 3"
-            date="2023-10-03"
-            content="This is the content of daily note 3"
-            tags={["work"]}
-            isPinned={false}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 3"
-            date="2023-10-03"
-            content="This is the content of daily note 3"
-            tags={["work"]}
-            isPinned={false}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 3"
-            date="2023-10-03"
-            content="This is the content of daily note 3"
-            tags={["work"]}
-            isPinned={true}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 3"
-            date="2023-10-03"
-            content="This is the content of daily note 3"
-            tags={["work"]}
-            isPinned={true}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 3"
-            date="2023-10-03"
-            content="This is the content of daily note 3"
-            tags={["work"]}
-            isPinned={true}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-          <NoteCard
-            title="Daily Note 3"
-            date="2023-10-03"
-            content="This is the content of daily note 3"
-            tags={["work"]}
-            isPinned={true}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            onPinNote={onPinNote}
-          />
-
+          {notesInfo.map((note, index) => {
+            return (
+              <NoteCard
+                key={note._id}
+                title={note.title}
+                date={moment(note.createdOn).format("DD MMM YYYY")}
+                content={note.content}
+                tags={note.tags}
+                isPinned={note.isPinned}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onPinNote={onPinNote}
+              />
+            );
+          })}
         </div>
         {/* </DndProvider> */}
       </div>

@@ -52,9 +52,9 @@ app.post('/create-account', async (req, res) => {
   const isUser = await User.findOne({ email: email });
 
   if(isUser) {
-    return res.json({
+    return res.status(401).json({
       error: true,
-      message: "User Already Exists!"
+      message: "User Already Exists! Please Login.",
     })
   }
 
@@ -206,15 +206,12 @@ app.get('/all-notes', authenticationToken, async(req, res) => {
   try {
     const notes = await Note.find({ userId: user._id}).sort({ isPinned: -1 })
 
-
     return res.json({
       error: false,
       message: "Notes Retrieved Successfully!",
       notes
     })
   } catch(e) {
-      console.log(e);
-
       return res.status(500).json({
         error: true,
         message: "Internal Server Error"

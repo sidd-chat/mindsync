@@ -5,7 +5,6 @@ const PasswordInput = ({value, onChange, placeholder}) => {
   const [ showPassword, setShowPassword ] = useState(false);
 
   const toggleShowPassword = () => {
-    console.log("Eye clicked!");
     setShowPassword(!showPassword);
   }
 
