@@ -35,27 +35,28 @@ const AddEditNote = ({ noteData, type, onClose }) => {
   return (
     <div className="relative">
       <button
-        className="w-10 h-10 rounded-xl cursor-pointer flex items-center justify-center absolute -top-3 -right-3 hover:bg-white"
+        className="w-10 h-10 rounded-xl cursor-pointer flex items-center justify-center absolute -top-0 -right-0 hover:bg-white"
         onClick={onClose}
       >
         <MdClose className="text-xl text-slate-400" />
       </button>
 
       <div className="flex flex-col gap-2">
-        <label className="input-label">TITLE</label>
+        {/* <label className="input-label text-black">TITLE</label> */}
         <input
           type="text"
-          className="text-2xl text-slate-950 outline-none"
-          placeholder="Go to Gym at 5"
+          className="text-2xl mt-5 text-gray-600 outline-none"
+          placeholder="Go to Gym at 5..."
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
           }}
         />
+        <br className=""/>
       </div>
 
       <div className="flex flex-col gap-2 mt-4">
-        <label className="input-label">CONTENT</label>
+        {/* <label className="input-label">CONTENT</label> */}
         <textarea
           type="text"
           className="text-sm text-slate-950 outline-none bg-slate-50 p-2 rounded"
@@ -68,8 +69,8 @@ const AddEditNote = ({ noteData, type, onClose }) => {
         />
       </div>
 
-      <div className="mt-3">
-        <label className="input-label">TAGS</label>
+      <div className="mt-10">
+        <label className="input-label text-black">TAGS</label>
         <TagInput tags={tags} setTags={setTags} />
       </div>
 
